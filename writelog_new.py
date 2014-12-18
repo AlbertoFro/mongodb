@@ -41,7 +41,7 @@ def main():
     while True:
         line = p.stdout.readline()
         data = parse_line(line)
-#       ciccio ciccio = line
+#         ciccio = line
 ##        new_posts = [{"author": data,
 ##               "text": "123",
 ##               "tags": "abc"}]
