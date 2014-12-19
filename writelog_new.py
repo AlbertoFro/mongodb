@@ -1,13 +1,16 @@
 '''
-Created on Dec 16, 2014
-
-@author: alberto
-
-Created on Dec 12, 2014
-
-@author: alberto
+#-------------------------------------------------------------------------------
+# Name:        writelog mongodb
+# Purpose:
+#
+# Author:      alberto.frosi
+#
+# Created:     16/12/2014
+# Copyright:   (c) alberto.frosi 2014
+# Licence:    Use of this source code is governed by a BSD-style
+#-------------------------------------------------------------------------------
+#!/usr/bin/env python
 '''
-
 import re
 from datetime import datetime
 from subprocess import Popen, PIPE, STDOUT
@@ -18,9 +21,8 @@ import pymongo
 HOST = 'AF-HP'
 LOG_PATH = 'f:\jasperserver.log'
 DB_NAME = 'mydb'
-COLLECTION_NAME = 'jasper_new'
-MAX_COLLECTION_SIZE = 5  # in megabytes
-
+COLLECTION_NAME = 'jasperlog1'
+MAX_COLLECTION_SIZE = 5 # in megabytes
 
 def main():
     # connect to mongodb
@@ -30,7 +32,7 @@ def main():
     try:
         mongo_coll = mongo_db.create_collection(COLLECTION_NAME,
                                                 capped=True,
-                                                size=MAX_COLLECTION_SIZE * 1048576)
+                                                size=MAX_COLLECTION_SIZE*1048576)
     except CollectionInvalid:
         mongo_coll = mongo_db[COLLECTION_NAME]
 
@@ -38,28 +40,40 @@ def main():
     cmd = 'tail -f f:\jasperserver.log'
     p = Popen(cmd, shell=True, stdout=PIPE, stderr=STDOUT)
     # parse and store data
+
+
+
     while True:
+
         line = p.stdout.readline()
-        data = parse_line(line)
-#        new_posts = [{"loglinetxt": loglinetxt,
-#                      "host": HOST,
-#                      "logpath": LOG_PATH,
-#                      "collection_name": COLLECTION_NAME}]
-#        mongo_coll.insert(new_posts)
+
+        loglinetxt = parse_line(line)
+
+        new_posts = [{"loglinetxt": line,
+                      "host": HOST,
+                      "logpath": LOG_PATH,
+                      "collection_name":COLLECTION_NAME}]
+
+        mongo_coll.insert(new_posts)
+
+
 
 def parse_line(line):
+
     #    m = re.search('controls', line)
     #   ('(?<=abc)def', 'abcdef')
-    m = re.search('(?<=coyote)', line)
+    m = re.search('(?<=AuthenticatorBase)', line)
+
     if m:
-        #        print "m.group() : ", m.group()
-        #        print "m.group(1) : ", m.group(1)
-        #        print "m.group(2) : ", m.group(2)
+        #print m.group()
         print("found a match!")
 
+
     else:
-        print ("no match")
-        return {}
+        print(" No found a match!")
+        return False
+
+
 
 
 if __name__ == '__main__':
