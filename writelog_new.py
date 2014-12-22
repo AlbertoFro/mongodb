@@ -49,7 +49,8 @@ def parse_line(line):
 
         print("found a match!")
         #print(today)
-
+        #print line.split(",")
+        a,b,c = line.split(",")
         DB_NAME = 'mydb'
         COLLECTION_NAME = 'jasperok'
         mongo_conn = Connection()
@@ -58,7 +59,10 @@ def parse_line(line):
         new_posts = [{"loglinetxt": line,
                       "host": HOST,
                       "logpath": LOG_PATH,
-                      "collection_name":COLLECTION_NAME}]
+                      "collection_name":COLLECTION_NAME,
+                      "a": a,
+                      "b": b,
+                      "c": c}]
 
         mongo_coll.insert(new_posts)
 
