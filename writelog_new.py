@@ -19,42 +19,23 @@ from pymongo.errors import CollectionInvalid
 import pymongo
 
 HOST = 'AF-HP'
-LOG_PATH = 'f:\jasperserver.log'
+LOG_PATH = '/home/alberto/Documenti/Win7SP1/jasperserver1.log'
 DB_NAME = 'mydb'
-COLLECTION_NAME = 'jasperlog1'
+COLLECTION_NAME = 'jasperok'
 MAX_COLLECTION_SIZE = 5 # in megabytes
+#today = datetime.date.today()
+
 
 def main():
-    # connect to mongodb
 
-    mongo_conn = Connection()
-    mongo_db = mongo_conn[DB_NAME]
-    try:
-        mongo_coll = mongo_db.create_collection(COLLECTION_NAME,
-                                                capped=True,
-                                                size=MAX_COLLECTION_SIZE*1048576)
-    except CollectionInvalid:
-        mongo_coll = mongo_db[COLLECTION_NAME]
 
     # open remote log file
-    cmd = 'tail -f f:\jasperserver.log'
+    cmd = 'tail -f /home/alberto/Documenti/Win7SP1/jasperserver1.log'
     p = Popen(cmd, shell=True, stdout=PIPE, stderr=STDOUT)
-    # parse and store data
-
-
 
     while True:
-
         line = p.stdout.readline()
-
         loglinetxt = parse_line(line)
-
-        new_posts = [{"loglinetxt": line,
-                      "host": HOST,
-                      "logpath": LOG_PATH,
-                      "collection_name":COLLECTION_NAME}]
-
-        mongo_coll.insert(new_posts)
 
 
 
@@ -62,19 +43,29 @@ def parse_line(line):
 
     #    m = re.search('controls', line)
     #   ('(?<=abc)def', 'abcdef')
-    m = re.search('(?<=AuthenticatorBase)', line)
+    m = re.search('(?<=ERROR)', line)
 
     if m:
-        #print m.group()
-        print("found a match!")
 
+        print("found a match!")
+        #print(today)
+
+        DB_NAME = 'mydb'
+        COLLECTION_NAME = 'jasperok'
+        mongo_conn = Connection()
+        mongo_db = mongo_conn[DB_NAME]
+        mongo_coll = mongo_db[COLLECTION_NAME]
+        new_posts = [{"loglinetxt": line,
+                      "host": HOST,
+                      "logpath": LOG_PATH,
+                      "collection_name":COLLECTION_NAME}]
+
+        mongo_coll.insert(new_posts)
 
     else:
         print(" No found a match!")
-        return False
-
-
 
 
 if __name__ == '__main__':
     main()
+
