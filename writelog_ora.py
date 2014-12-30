@@ -19,7 +19,7 @@ from pymongo.errors import CollectionInvalid
 import pymongo
 
 HOST = 'AF-HP'
-LOG_PATH = '/home/alberto/Documenti/Win7SP1/ora_test.log'
+LOG_PATH = '/home/alberto/Documenti/Win7SP1/oracle_alert.txt'
 DB_NAME = 'mydb'
 COLLECTION_NAME = 'jasperok'
 MAX_COLLECTION_SIZE = 5 # in megabytes
@@ -30,7 +30,7 @@ def main():
 
 
     # open remote log file
-    cmd = 'tail -f /home/alberto/Documenti/Win7SP1/ora_test.log'
+    cmd = 'tail -n 1000000 -f /home/alberto/Documenti/Win7SP1/oracle_alert.txt'
     p = Popen(cmd, shell=True, stdout=PIPE, stderr=STDOUT)
 
     while True:
@@ -50,9 +50,9 @@ def parse_line(line):
         print("found a match!")
         #print(today)
 
-        print line.split(": ")
+        print line.split(" ")
 #        a,b = line.split(": ")
-        ora = line.split(": ")
+        ora = line.split(" ")
         a,b,= ora[0],ora[1]
         print a
         print b
