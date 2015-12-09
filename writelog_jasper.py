@@ -114,7 +114,7 @@ def parse_line_j(line_jasper):
             my_logger = logging.getLogger('jasper')
 
             my_logger.setLevel(logging.DEBUG)
-            handler = graypy.GELFHandler('91.0.112.46', 12201)
+            handler = graypy.GELFHandler('10.10.10.10', 12201)
             my_logger.addHandler(handler)
             my_logger.handlers = [my_logger.handlers[0], ]
             my_logger.debug(line_jasper)
@@ -123,14 +123,14 @@ def parse_line_j(line_jasper):
             DB_NAME = 'writelog'
             COLLECTION_NAME = 'writelog_servers'
 
-            mongo_conn = MongoClient("91.0.140.27", 27017)
+            mongo_conn = MongoClient("10.10.10.11", 27017)
             mongo_db = mongo_conn[DB_NAME]
 
             mongo_coll = mongo_db[COLLECTION_NAME]
 
             new_posts_my = [{"loglinetxt": line_jasper,
 
-                     "host": "REPORTER.FISVI.IT",
+                     "host": "HOST.ACME.COM",
 
                      "logpath": LOG_J,
 
@@ -152,7 +152,7 @@ def parse_line_j(line_jasper):
 
         my_logger = logging.getLogger('jasper')
         my_logger.setLevel(logging.DEBUG)
-        handler = graypy.GELFHandler('91.0.112.46', 12201)
+        handler = graypy.GELFHandler('10.10.10.10', 12201)
         my_logger.addHandler(handler)
         my_logger.handlers = [my_logger.handlers[0], ]
         my_logger.debug(line_jasper)
@@ -161,7 +161,7 @@ def parse_line_j(line_jasper):
 
         COLLECTION_NAME = 'writelog_servers'
 
-        mongo_conn = MongoClient("91.0.140.27", 27017)
+        mongo_conn = MongoClient("10.10.10.11", 27017)
 
         mongo_db = mongo_conn[DB_NAME]
 
@@ -169,7 +169,7 @@ def parse_line_j(line_jasper):
 
         new_posts_my = [{"loglinetxt": line_jasper,
 
-                         "host": "REPORTER.FISVI.IT",
+                         "host": "HOST.ACME.COM",
 
                          "logpath": LOG_J,
 
@@ -192,15 +192,15 @@ def mando_mail():
 
     #mando mail
 
-    sender = 'admin_psutil@fisvi.com'
+    sender = 'admin@acme.com'
 
-    receivers = 'alberto.frosi@fisvi.com'
+    receivers = 'albertofro@acme.com'
 
     msg = MIMEMultipart()
 
-    msg['From'] = 'admin_psutil@fisvi.com'
+    msg['From'] = 'admin@acme.com'
 
-    msg['To'] = 'alberto.frosi@fisvi.com'
+    msg['To'] = 'albertofro@acme.com'
 
     msg['Subject'] = "Errore jasperserver.log"
 
@@ -210,7 +210,7 @@ def mando_mail():
 
     try:
 
-        smtpObj = smtplib.SMTP('10.1.3.21',25)
+        smtpObj = smtplib.SMTP('10.10.10.12',25)
 
         smtpObj.sendmail(sender, receivers, msg.as_string())
 
